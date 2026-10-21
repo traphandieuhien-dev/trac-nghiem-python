@@ -163,21 +163,21 @@ const SUB = {py:"Python giữa kỳ",btl:"BTL Python",web:"Web 1",qlda:"QLDA PM"
 // s: môn · t: giờ · h: số giờ ôn
 const PLAN = [
  {d:"2026-10-21",fx:"Tối: học online Web 1",b:[
-  {s:"py",t:"14:00–17:00",h:3,ttl:"Python GK: Buổi 1–4 + Vòng lặp, List, Chuỗi",it:["Làm trắc nghiệm theo từng chủ đề","Xem mục Ôn tập câu sai, ghi lại lỗi hay mắc"],ln:["quiz"]}]},
+  {s:"py",t:"14:00–17:00",h:3,ttl:"Trắc nghiệm Python: phần nền tảng",it:["Tùy chọn bộ đề → chọn chủ đề: Tổng quan, Biến & kiểu, Nhập & ép kiểu, Toán tử, Phép toán bit, Điều kiện (~100 câu)","Câu có code: tự đoán kết quả trước rồi mới nhìn đáp án","Cuối buổi xem Ôn tập câu sai, ghi lỗi hay mắc ra giấy"],ln:["quiz"]}]},
  {d:"2026-10-22",fx:"Học cả ngày đến 21:00",b:[
   {s:"rest",t:"",ttl:"Không xếp ôn, ngủ sớm",it:[]}]},
  {d:"2026-10-23",fx:"Chiều: học 13:00–17:30",b:[
-  {s:"py",t:"8:30–11:00",h:2.5,ttl:"Python GK: OOP Chương 3",it:["class, __init__, thuộc tính/phương thức","Kế thừa, super(), đóng gói, ghi đè","Tự viết lại 1 lớp có kế thừa từ đầu"],ln:["poop"]},
+  {s:"py",t:"8:30–11:00",h:2.5,ttl:"Trắc nghiệm Python: Vòng lặp → Hàm",it:["Chọn chủ đề: Vòng lặp, List, Chuỗi, Hàm, Lambda · map · filter, Lỗi & ngoại lệ (~120 câu)","Chú ý bẫy: range, slicing, sort() trả về None, b = a với list","Xem Ôn tập câu sai"],ln:["quiz"]},
   {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 GK: ôn lại bài trên lớp",it:["Xem lại các bài thực hành từ đầu kỳ + bài học online tối 21/10","Ghi 1 tờ cú pháp hay quên"],ln:["crud"]}]},
  {d:"2026-10-24",fx:"Sáng: Kiểm thử 8:30–11:00",b:[
   {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 GK: luyện code tay",it:["Tự làm lại 1 trang từ đầu, không nhìn code cũ","Luyện các dạng hay ra: form, bảng, bố cục CSS…"]},
-  {s:"py",t:"19:30–21:30",h:2,ttl:"Python GK: bài tập code",it:["Tự gõ 8–10 bài trong bộ 40 bài, không nhìn lời giải"],ln:["p40"]}]},
+  {s:"py",t:"19:30–21:30",h:2,ttl:"Trắc nghiệm Python: OOP",it:["Chọn chủ đề OOP (88 câu): class, __init__, kế thừa, super(), đóng gói, ghi đè","Sai câu nào thì tra lại lý thuyết trong Ôn OOP Ch3"],ln:["quiz","poop"]}]},
  {d:"2026-10-25",fx:"Cả ngày trống",b:[
-  {s:"py",t:"8:00–10:00",h:2,ttl:"Python GK: làm đề bấm giờ",it:["Làm Đề 1 rồi Đề 3 như thi thật","Chấm theo lời giải, sửa từng chỗ sai"],ln:["pde","pc4"]},
+  {s:"py",t:"8:00–10:00",h:2,ttl:"Thi thử trắc nghiệm Python",it:["Nguồn tài liệu → Luyện đề giữa kỳ (dạng đề thầy), bật Trộn thứ tự, làm một mạch như thi thật","Còn giờ: chủ đề GUI Tkinter, Nâng cao, Thuật toán"],ln:["quiz"]},
   {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 GK: làm bài như thi",it:["Bấm giờ làm trọn 1 bài thực hành","Ghi lỗi gặp phải vào tờ cú pháp"]},
-  {s:"py",t:"20:00–20:30",h:0.5,ttl:"Python GK: chốt",it:["Lướt lại câu sai trong trắc nghiệm","Ngủ trước 23:00"],ln:["quiz"]}]},
+  {s:"py",t:"20:00–20:30",h:0.5,ttl:"Trắc nghiệm Python: chốt",it:["Bấm Làm lại các câu sai từ buổi sáng","Đọc lại tờ lỗi hay mắc · Ngủ trước 23:00"],ln:["quiz"]}]},
  {d:"2026-10-26",fx:"Sáng: thi Python",b:[
-  {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Python",it:["Phòng NDN.903"],exam:1},
+  {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Python",it:["Phòng NDN.903 · Trắc nghiệm"],exam:1},
   {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: khởi động",it:["Chốt đề tài + chức năng","Dựng khung project, các lớp chính","Lập danh sách việc còn lại"]},
   {s:"web",t:"19:30–21:00",h:1.5,ttl:"Web 1 GK: chốt",it:["Đọc lại tờ cú pháp + lỗi hay gặp","Ngủ trước 23:00"]}]},
  {d:"2026-10-27",fx:"Sau giờ thi: học cả ngày đến 21:00",b:[
