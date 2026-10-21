@@ -86,7 +86,7 @@ li{margin:1px 0}
 .links a{font-size:12.5px;font-weight:600;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface);color:var(--c)}
 .blk.exam{background:var(--exam-bg)}
 .blk.exam .ttl{color:var(--exam);text-transform:uppercase}
-.blk.rest .ttl{color:var(--muted);font-weight:600}
+.blk.rest .ttl{color:var(--muted);font-weight:600;font-size:14px}
 .py,.btl{--c:var(--py);--bg-c:var(--py-bg)} .web{--c:var(--web);--bg-c:var(--web-bg)}
 .qlda{--c:var(--qlda);--bg-c:var(--qlda-bg)} .kt{--c:var(--kt);--bg-c:var(--kt-bg)}
 .ex{--c:var(--exam);--bg-c:var(--exam-bg)}
@@ -108,7 +108,7 @@ li{margin:1px 0}
   <header>
     <div class="eyebrow">Lớp 66.CNTT-CLC · 21/10 – 7/11</div>
     <h1>Lịch ôn thi HK1</h1>
-    <p class="sub">Giờ ôn đã né lịch học trên lớp và giờ dạy gia sư buổi tối. Bấm ô vuông khi xong một khối.</p>
+    <p class="sub">Giờ ôn đã né giờ học và lớp Kiểm thử. Bấm ô vuông khi xong một khối.</p>
   </header>
 
   <div class="next" id="next"></div>
@@ -126,9 +126,9 @@ li{margin:1px 0}
   <main id="days" class="wrap" style="gap:12px"></main>
 
   <div class="note">
-    <p><b>Giả định:</b> lịch trên lớp lấy theo thời khóa biểu tuần cũ, cộng thêm Kiểm thử (tối thứ 3, 5: 18:00–20:30; sáng thứ 7: 8:30–11:00). Gia sư tối thứ 2, 4, 6. Tuần 2/11 – 7/11 ban ngày không học trên lớp. Nếu có gì khác, nhắn Claude để chỉnh.</p>
+    <p><b>Giả định:</b> tuần 2/11 – 7/11 ngoài giờ thi chỉ còn lớp Kiểm thử (tối thứ 3, 5 và sáng thứ 7). Nếu có lịch học khác, nhắn Claude để chỉnh.</p>
     <p><b>TOEIC &amp; tiếng Nhật</b> trong mùa thi chỉ giữ nhịp 20 phút mỗi thứ để không đứt chuỗi. Từ 8/11 tăng lên: TOEIC 60 phút/ngày, tiếng Nhật 45 phút/ngày cho mục tiêu N5 cuối năm.</p>
-    <p><b>Kiến trúc &amp; TK</b> được nhiều giờ nhất (≈15 giờ) vì mục tiêu là 10 điểm, trong khi sức hiện tại khoảng 8.</p>
+    <p><b>Kiến trúc &amp; TK</b> được nhiều giờ nhất (≈19 giờ) vì mục tiêu là 10 điểm, trong khi sức hiện tại khoảng 8.</p>
     <p>Link tài liệu mở trang Claude của bạn, cần đăng nhập đúng tài khoản.</p>
   </div>
 </div>
@@ -158,72 +158,65 @@ const L = {
   kpz:["PizzaStore",A("5PbCj4C5fHWfxitgcD2Wv8")],
 };
 const SUB = {py:"Python giữa kỳ",btl:"BTL Python",web:"Web 1",qlda:"QLDA PM",kt:"Kiến trúc & TK",ex:"Thi"};
-const FIX = {
-  1:"Trên lớp: sáng Python + QLDA, chiều TH Python · Tối: gia sư 17:30–21:00",
-  2:"Trên lớp: sáng Web 1 + QLDA, chiều trống · Tối: Kiểm thử 18:00–20:30",
-  3:"Trên lớp: sáng Python, chiều TH QLDA · Tối: gia sư 17:30–21:00",
-  4:"Trên lớp: sáng Web 1, chiều TH Web 1 · Tối: Kiểm thử 18:00–20:30",
-  5:"Trên lớp: chiều 13:00–17:30 · Tối: gia sư 17:30–21:00",
-  6:"Sáng: Kiểm thử 8:30–11:00 · Chiều: TH lập trình · Tối trống",
-  0:"Cả ngày trống",
-};
-const EXAMWEEK_FIX = {1:"Tuần thi: ban ngày trống · Tối: gia sư 17:30–21:00",2:"Tuần thi: ban ngày trống · Tối: Kiểm thử 18:00–20:30",
-  3:"Tuần thi: ban ngày trống · Tối: gia sư 17:30–21:00",4:"Tuần thi: ban ngày trống · Tối: Kiểm thử 18:00–20:30",
-  5:"Tuần thi: ban ngày trống · Tối: gia sư 17:30–21:00",6:"Sáng: Kiểm thử 8:30–11:00 (trùng giờ thi Python, hỏi lại lớp)",0:"Cả ngày trống"};
-
 // s: môn · t: giờ · h: số giờ ôn
 const PLAN = [
- {d:"2026-10-21",b:[
-  {s:"py",t:"21:15–23:00",h:1.75,ttl:"Python GK: Buổi 1–4",it:["Làm trắc nghiệm phần Biến, Nhập/ép kiểu, Toán tử, Điều kiện","Xem mục Ôn tập câu sai, ghi lại lỗi hay mắc"],ln:["quiz"]}]},
+ {d:"2026-10-21",fx:"Tối: học online Web 1",b:[
+  {s:"py",t:"14:00–17:00",h:3,ttl:"Python GK: Buổi 1–4 + Vòng lặp, List, Chuỗi",it:["Làm trắc nghiệm theo từng chủ đề","Xem mục Ôn tập câu sai, ghi lại lỗi hay mắc"],ln:["quiz"]}]},
  {d:"2026-10-22",fx:"Học cả ngày đến 21:00",b:[
-  {s:"py",t:"21:30–23:00",h:1.5,ttl:"Python GK: Vòng lặp, List, Chuỗi, Hàm",it:["Trắc nghiệm phần Vòng lặp, List, Chuỗi","Tự gõ 8–10 bài trong bộ 40 bài, không nhìn lời giải"],ln:["quiz","p40"]}]},
- {d:"2026-10-23",fx:"Sáng trống · Chiều học 13:00–17:30 · Tối: gia sư 17:30–21:00",b:[
-  {s:"py",t:"8:30–11:00",h:2.5,ttl:"Python GK: OOP Chương 3",it:["class, __init__, thuộc tính/phương thức","Kế thừa, super(), đóng gói, ghi đè","Tự viết lại 1 lớp có kế thừa từ đầu"],ln:["poop"]}]},
- {d:"2026-10-24",b:[
-  {s:"web",t:"19:00–22:00",h:3,ttl:"Web 1 GK: ôn lý thuyết + bài thực hành",it:["Xem lại các bài thực hành trên lớp từ đầu kỳ","Tự làm lại 1 trang từ đầu, không nhìn code cũ"],ln:["crud"]}]},
- {d:"2026-10-25",b:[
-  {s:"py",t:"8:00–11:30",h:3.5,ttl:"Python GK: làm đề bấm giờ",it:["Làm Đề 1 rồi Đề 3, mỗi đề bấm giờ như thi thật","Chấm theo lời giải, sửa từng chỗ sai","Lướt Chương 4 nếu thầy có cho vào đề"],ln:["pde","pc4"]},
-  {s:"web",t:"13:30–17:00",h:3.5,ttl:"Web 1 GK: luyện code tay",it:["Luyện các dạng hay ra: form, bảng, bố cục CSS…","Ghi 1 tờ cú pháp hay quên"]},
-  {s:"py",t:"19:30–20:15",h:0.75,ttl:"Python GK: chốt",it:["Làm lại toàn bộ câu sai trong trắc nghiệm","Đi ngủ sớm"],ln:["quiz"]}]},
- {d:"2026-10-26",b:[
+  {s:"rest",t:"",ttl:"Không xếp ôn, ngủ sớm",it:[]}]},
+ {d:"2026-10-23",fx:"Chiều: học 13:00–17:30",b:[
+  {s:"py",t:"8:30–11:00",h:2.5,ttl:"Python GK: OOP Chương 3",it:["class, __init__, thuộc tính/phương thức","Kế thừa, super(), đóng gói, ghi đè","Tự viết lại 1 lớp có kế thừa từ đầu"],ln:["poop"]},
+  {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 GK: ôn lại bài trên lớp",it:["Xem lại các bài thực hành từ đầu kỳ + bài học online tối 21/10","Ghi 1 tờ cú pháp hay quên"],ln:["crud"]}]},
+ {d:"2026-10-24",fx:"Sáng: Kiểm thử 8:30–11:00",b:[
+  {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 GK: luyện code tay",it:["Tự làm lại 1 trang từ đầu, không nhìn code cũ","Luyện các dạng hay ra: form, bảng, bố cục CSS…"]},
+  {s:"py",t:"19:30–21:30",h:2,ttl:"Python GK: bài tập code",it:["Tự gõ 8–10 bài trong bộ 40 bài, không nhìn lời giải"],ln:["p40"]}]},
+ {d:"2026-10-25",fx:"Cả ngày trống",b:[
+  {s:"py",t:"8:00–10:00",h:2,ttl:"Python GK: làm đề bấm giờ",it:["Làm Đề 1 rồi Đề 3 như thi thật","Chấm theo lời giải, sửa từng chỗ sai"],ln:["pde","pc4"]},
+  {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 GK: làm bài như thi",it:["Bấm giờ làm trọn 1 bài thực hành","Ghi lỗi gặp phải vào tờ cú pháp"]},
+  {s:"py",t:"20:00–20:30",h:0.5,ttl:"Python GK: chốt",it:["Lướt lại câu sai trong trắc nghiệm","Ngủ trước 23:00"],ln:["quiz"]}]},
+ {d:"2026-10-26",fx:"Sáng: thi Python",b:[
   {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Python",it:["Phòng NDN.903"],exam:1},
-  {s:"web",t:"21:15–22:45",h:1.5,ttl:"Web 1 GK: chốt",it:["Đọc lại tờ cú pháp, xem lại bài TH gần nhất","Ngủ trước 23:30"]}]},
- {d:"2026-10-27",b:[
-  {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Web 1",it:["Phòng NDN.210"],exam:1},
-  {s:"py",t:"13:30–17:00",h:3.5,ttl:"BTL Python: khởi động",it:["Chốt đề tài + chức năng","Dựng khung project, các lớp chính","Lập danh sách việc còn lại"]}]},
- {d:"2026-10-28",b:[
-  {s:"kt",t:"21:15–22:45",h:1.5,ttl:"KT&TK CK: rà lại các mẫu",it:["Đọc Cẩm nang điểm 10","Với mỗi mẫu: khi nào dùng, sơ đồ lớp, khung code"],ln:["kcn","kdp"]}]},
- {d:"2026-10-29",b:[
-  {s:"qlda",t:"21:00–22:30",h:1.5,ttl:"QLDA CK: rà BTL",it:["Đọc lại BTL, liệt kê phần còn thiếu","Mở lại file MS Project, kiểm tra tiến độ/tài nguyên"],ln:["qms"]}]},
- {d:"2026-10-30",b:[
-  {s:"kt",t:"21:15–22:45",h:1.5,ttl:"KT&TK CK: luyện đề",it:["Làm 2 bài trong Bộ đề luyện SOT380","So với lời giải, ghi lỗi"],ln:["kbd","kbs"]}]},
- {d:"2026-10-31",b:[
-  {s:"py",t:"19:00–22:00",h:3,ttl:"BTL Python: code chức năng chính",it:["Hoàn thành các chức năng cốt lõi","Chạy thử với dữ liệu thật"]}]},
- {d:"2026-11-01",b:[
+  {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: khởi động",it:["Chốt đề tài + chức năng","Dựng khung project, các lớp chính","Lập danh sách việc còn lại"]},
+  {s:"web",t:"19:30–21:00",h:1.5,ttl:"Web 1 GK: chốt",it:["Đọc lại tờ cú pháp + lỗi hay gặp","Ngủ trước 23:00"]}]},
+ {d:"2026-10-27",fx:"Sau giờ thi: học cả ngày đến 21:00",b:[
+  {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Web 1",it:["Phòng NDN.210"],exam:1}]},
+ {d:"2026-10-28",fx:"Cả ngày trống",b:[
+  {s:"py",t:"8:00–11:30",h:3.5,ttl:"BTL Python: code chức năng chính",it:["Hoàn thành các chức năng cốt lõi","Chạy thử với dữ liệu thật"]},
+  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: rà lại các mẫu",it:["Đọc Cẩm nang điểm 10","Với mỗi mẫu: khi nào dùng, sơ đồ lớp, khung code"],ln:["kcn","kdp"]},
+  {s:"qlda",t:"19:30–21:30",h:2,ttl:"QLDA CK: rà BTL",it:["Đọc lại BTL, liệt kê phần còn thiếu","Mở lại file MS Project, kiểm tra tiến độ/tài nguyên"],ln:["qms"]}]},
+ {d:"2026-10-29",fx:"Học cả ngày đến 21:00",b:[
+  {s:"rest",t:"",ttl:"Không xếp ôn, ngủ sớm",it:[]}]},
+ {d:"2026-10-30",fx:"Chiều: học 13:00–17:30",b:[
+  {s:"kt",t:"8:30–11:30",h:3,ttl:"KT&TK CK: luyện đề",it:["Làm 2 bài trong Bộ đề luyện SOT380","So với lời giải, ghi lỗi"],ln:["kbd","kbs"]},
+  {s:"rest",t:"Tối",ttl:"Nghỉ: nạp lại sức trước 2 ngày ôn QLDA",it:[]}]},
+ {d:"2026-10-31",fx:"Sáng: Kiểm thử 8:30–11:00",b:[
+  {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: hoàn thành chức năng",it:["Xong toàn bộ chức năng, bắt đầu viết báo cáo"]},
+  {s:"kt",t:"19:30–21:30",h:2,ttl:"KT&TK CK: Factory/PizzaStore",it:["Xem lại PizzaStore và các mẫu tạo đối tượng"],ln:["kpz"]}]},
+ {d:"2026-11-01",fx:"Cả ngày trống",b:[
   {s:"qlda",t:"8:00–11:30",h:3.5,ttl:"QLDA CK: hoàn thiện BTL",it:["Sửa báo cáo, sơ đồ, file MS Project","Chuẩn bị phần trình bày"],ln:["qms","qc3"]},
-  {s:"qlda",t:"13:30–17:00",h:3.5,ttl:"QLDA CK: lý thuyết",it:["Học theo Mind map, từng chương","Làm trắc nghiệm QLDA"],ln:["qmm","qtl","qtn"]},
-  {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 CK: khởi động",it:["Xem lại đề/bài GK, những phần làm chưa tốt","Lập danh sách dạng bài thực hành"],ln:["crud"]}]},
- {d:"2026-11-02",b:[
+  {s:"qlda",t:"14:00–17:00",h:3,ttl:"QLDA CK: lý thuyết",it:["Học theo Mind map, từng chương","Làm trắc nghiệm QLDA"],ln:["qmm","qtl","qtn"]},
+  {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 CK: khởi động",it:["Xem lại bài GK, những phần làm chưa tốt","Lập danh sách dạng bài thực hành"],ln:["crud"]}]},
+ {d:"2026-11-02",fx:"Tuần thi: cả ngày trống",b:[
   {s:"qlda",t:"7:30–11:30",h:4,ttl:"QLDA CK: đề thi thử",it:["Làm Đề thi thử QLDA, bấm giờ","Ôn lại phần sai"],ln:["qde","qtl"]},
-  {s:"qlda",t:"13:30–17:00",h:3.5,ttl:"QLDA CK: luyện vấn đáp",it:["Tự hỏi – tự trả lời về BTL: vì sao chọn cách làm này, đường găng, phân bổ nguồn lực…","Nói to thành lời, bấm giờ 5 phút/câu"],ln:["qmm"]},
-  {s:"qlda",t:"21:15–22:15",h:1,ttl:"QLDA CK: chốt",it:["In/lưu BTL, sạc máy","Ngủ sớm"]}]},
- {d:"2026-11-03",b:[
+  {s:"qlda",t:"14:00–17:30",h:3.5,ttl:"QLDA CK: luyện vấn đáp",it:["Tự hỏi – tự trả lời về BTL: vì sao chọn cách làm này, đường găng, phân bổ nguồn lực…","Nói to thành lời, bấm giờ 5 phút/câu"],ln:["qmm"]},
+  {s:"qlda",t:"20:00–21:00",h:1,ttl:"QLDA CK: chốt",it:["In/lưu BTL, sạc máy","Ngủ sớm"]}]},
+ {d:"2026-11-03",fx:"Sáng: thi QLDA · Tối: Kiểm thử 18:00–20:30",b:[
   {s:"ex",t:"Sáng",ttl:"Thi cuối kỳ QLDA PM",it:["Phòng NDN.707 · BTL – Vấn đáp"],exam:1},
-  {s:"kt",t:"13:30–17:00",h:3.5,ttl:"KT&TK CK: viết lại 4 mẫu",it:["Decorator, Composite, Builder, Singleton: viết code từ giấy trắng","Đối chiếu Khuôn 4 mẫu"],ln:["kk4","kcd"]},
-  {s:"kt",t:"21:00–22:15",h:1.25,ttl:"KT&TK CK: Factory/PizzaStore",it:["Xem lại PizzaStore và các mẫu tạo đối tượng"],ln:["kpz"]}]},
- {d:"2026-11-04",b:[
-  {s:"kt",t:"7:30–11:30",h:4,ttl:"KT&TK CK: thi thử bấm giờ",it:["Làm Đề thi KTPM như thi thật","Chấm theo Cẩm nang điểm 10: thiếu gì để lên 10?"],ln:["kdt","kcn"]},
-  {s:"web",t:"13:30–17:00",h:3.5,ttl:"Web 1 CK: luyện thực hành",it:["Làm lại trọn 1 bài thực hành, bấm giờ","CRUD: thêm, sửa, xóa, hiển thị"],ln:["crud"]},
-  {s:"web",t:"21:15–22:45",h:1.5,ttl:"Web 1 CK: lỗi hay gặp",it:["Ghi các lỗi đã gặp khi làm bài chiều"]}]},
- {d:"2026-11-05",b:[
+  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: viết lại 4 mẫu",it:["Decorator, Composite, Builder, Singleton: viết code từ giấy trắng","Đối chiếu Khuôn 4 mẫu"],ln:["kk4","kcd"]},
+  {s:"kt",t:"21:00–22:00",h:1,ttl:"KT&TK CK: soát lỗi",it:["Đọc lại chỗ chiều nay viết sai"]}]},
+ {d:"2026-11-04",fx:"Cả ngày trống",b:[
+  {s:"kt",t:"8:00–11:30",h:3.5,ttl:"KT&TK CK: thi thử bấm giờ",it:["Làm Đề thi KTPM như thi thật","Chấm theo Cẩm nang điểm 10: thiếu gì để lên 10?"],ln:["kdt","kcn"]},
+  {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 CK: luyện thực hành",it:["Làm lại trọn 1 bài thực hành, bấm giờ","CRUD: thêm, sửa, xóa, hiển thị"],ln:["crud"]},
+  {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 CK: lỗi hay gặp",it:["Làm thêm 1 bài, ghi các lỗi gặp phải"]}]},
+ {d:"2026-11-05",fx:"Chiều: thi KT&TK · Tối: Kiểm thử 18:00–20:30",b:[
   {s:"kt",t:"7:30–11:00",h:3.5,ttl:"KT&TK CK: vá lỗ hổng",it:["Chỉ ôn các mẫu hôm qua làm còn sai","Viết nhanh lại khung code mỗi mẫu 1 lần"],ln:["kk4","kbd"]},
   {s:"ex",t:"Chiều",ttl:"Thi cuối kỳ Kiến trúc & TK",it:["Phòng NDN.101 · Thực hành"],exam:1},
   {s:"web",t:"21:00–22:30",h:1.5,ttl:"Web 1 CK: chốt",it:["Lướt tờ cú pháp + lỗi hay gặp","Ngủ sớm"]}]},
- {d:"2026-11-06",b:[
+ {d:"2026-11-06",fx:"Sáng: thi Web 1",b:[
   {s:"ex",t:"7:30",ttl:"Thi cuối kỳ Web 1",it:["Phòng NDN.903 · Thực hành"],exam:1},
-  {s:"py",t:"13:30–17:00",h:3.5,ttl:"BTL Python: hoàn thiện",it:["Sửa lỗi, kiểm thử lại toàn bộ","Hoàn thiện báo cáo/slide"]},
-  {s:"py",t:"21:15–22:30",h:1.25,ttl:"BTL Python: tập trình bày",it:["Chạy demo từ đầu đến cuối","Chuẩn bị trả lời: lớp nào làm gì, vì sao thiết kế vậy"]}]},
- {d:"2026-11-07",b:[
+  {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: hoàn thiện",it:["Sửa lỗi, kiểm thử lại toàn bộ","Hoàn thiện báo cáo/slide"]},
+  {s:"py",t:"20:00–20:30",h:0.5,ttl:"BTL Python: chạy thử demo",it:["Chạy demo từ đầu đến cuối","Chuẩn bị trả lời: lớp nào làm gì, vì sao thiết kế vậy"]}]},
+ {d:"2026-11-07",fx:"Sáng: thi Python · Nghỉ buổi Kiểm thử (ưu tiên thi)",b:[
   {s:"ex",t:"Sáng",ttl:"Thi cuối kỳ Python",it:["Phòng G4.102 · Chấm đồ án, BTL"],exam:1},
   {s:"rest",t:"",ttl:"Xong học kỳ 🎉",it:[]}]},
 ];
@@ -239,7 +232,7 @@ let done = {}; try{ done = JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }cat
 const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(done)); }catch(e){} };
 const fmtH = h => (Math.round(h*100)/100).toString().replace(".",",") + "h";
 
-const grp = (day,b) => b.s==="py" && day.d>"2026-10-26" ? "btl" : b.s;
+const grp = (day,b) => b.s==="py" && day.d>="2026-10-26" ? "btl" : b.s;
 function renderTotals(){
   const t = {}, dn = {};
   PLAN.forEach(day=>day.b.forEach((b,i)=>{ if(!b.h) return; const k=grp(day,b); t[k]=(t[k]||0)+b.h; if(done[day.d+"#"+i]) dn[k]=(dn[k]||0)+b.h; }));
@@ -290,7 +283,7 @@ function renderDays(w){
   const range = w==="all" ? ["0000","9999"] : WEEKS[w];
   $("days").innerHTML = PLAN.filter(x=>x.d>=range[0]&&x.d<=range[1]).map(day=>{
     const dt = parse(day.d), wd = dt.getDay();
-    const fixed = day.fx || (day.d>="2026-11-02" ? EXAMWEEK_FIX[wd] : FIX[wd]);
+    const fixed = day.fx;
     const cls = day.d===todayIso ? " today" : day.d<todayIso ? " past" : "";
     return `<section class="day${cls}" id="d${day.d}">
       <div class="dh"><span class="dd">${dt.getDate()}/${dt.getMonth()+1}</span><span class="dw">${WD[wd]}</span>${day.d===todayIso?'<span class="badge">Hôm nay</span>':""}</div>
