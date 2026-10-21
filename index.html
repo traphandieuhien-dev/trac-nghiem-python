@@ -202,6 +202,7 @@ footer{font-size:12.5px;color:var(--muted);text-align:center}
 .pdf-title h1{font-size:28px;margin:4px 0}
 .pdf-title p{margin:0 0 8px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:50}
 </style>
 
 <div class="wrap">
@@ -237,7 +238,7 @@ footer{font-size:12.5px;color:var(--muted);text-align:center}
   <footer>Nguồn: tài liệu Buổi 1–4 (CodeLearn); slide và bài giảng Lập trình Python của TS. Nguyễn Đình Hưng (Ch1 Python cơ bản, Ch3 OOP, nd-hung.github.io); bổ sung từ W3Schools, CS50P, learnpython.org; nhóm “Luyện đề giữa kỳ” soạn theo dạng đề NEC311 của thầy. Mọi câu có code đều đã được chạy thử với Python 3.</footer>
 </div>
 
-<script>
+<script id="app">
 const QUESTIONS = [
 /* ================= BIẾN & KIỂU DỮ LIỆU (Buổi 1) ================= */
 {tp:"bien",lv:1,k:"code",src:"Buổi 1",run:1,om:1,
@@ -4315,6 +4316,7 @@ function renderReview(){
   $("rvBack").onclick=back; $("rvBack2").onclick=back;
   $("rvTop").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
   $("rvRetry").onclick=()=>{S.review=false;newSession(rows.map(x=>x.id));window.scrollTo({top:0})};
+  pdfPending=null;
   $("pdfBtn").onclick=()=>exportPdf(rows);
 }
 
@@ -4323,60 +4325,132 @@ async function getDownloads(){
   try{ if(window.claude&&typeof window.claude.use==="function") return await window.claude.use("downloads"); }catch(e){}
   return null;
 }
+// PDF dựng bằng chữ (không chụp ảnh màn hình): nhẹ cho điện thoại, chữ chọn/tìm được.
+// Thư viện và font nằm sẵn trong thư mục vendor/ của trang, không phụ thuộc CDN.
+let pdfFontsB64=null;
+async function pdfFonts(){
+  if(pdfFontsB64) return pdfFontsB64;
+  const b64=buf=>{const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);};
+  const get=async f=>{const r=await fetch("vendor/"+f);if(!r.ok)throw new Error("font "+f);return b64(await r.arrayBuffer());};
+  const [reg,bold,mono]=await Promise.all(["BeVietnamPro-Regular.ttf","BeVietnamPro-Bold.ttf","JetBrainsMono.ttf"].map(get));
+  return pdfFontsB64={reg,bold,mono};
+}
+// font PDF thiếu vài ký hiệu: đổi sang chữ thường để không bị mất
+const PDF_SUBST={"→":"->","←":"<-","↑":"^","√":"sqrt","π":"pi","∞":"vô cùng","ⁿ":"^n","✓":"(đúng)","✗":"(sai)","▴":"","▾":""};
+const pdfSafe=t=>String(t).replace(/[→←↑√π∞ⁿ✓✗▴▾]/g,c=>PDF_SUBST[c]);
+function buildPdf(rows,fonts){
+  const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:"pt",format:"a4"});
+  doc.addFileToVFS("bvp.ttf",fonts.reg); doc.addFont("bvp.ttf","bvp","normal");
+  doc.addFileToVFS("bvpb.ttf",fonts.bold); doc.addFont("bvpb.ttf","bvp","bold");
+  doc.addFileToVFS("mono.ttf",fonts.mono); doc.addFont("mono.ttf","mono","normal");
+  const PW=595.28, PH=841.89, M=42, W=PW-2*M, BOTTOM=PH-44;
+  const C={ink:[22,32,58],muted:[90,100,120],ok:[29,134,87],bad:[193,61,44],accent:[46,87,204],line:[213,219,229],code:[244,246,250],mark:[233,167,38]};
+  let y=M;
+  const need=h=>{ if(y+h>BOTTOM){ doc.addPage(); y=M; } };
+  // viết một đoạn chữ tự xuống dòng; trả về chiều cao đã dùng
+  const para=(str,{size=10.5,bold=false,color=C.ink,x=M,w=W,font="bvp",lh=1.45,gap=0}={})=>{
+    doc.setFont(font,bold&&font!=="mono"?"bold":"normal"); doc.setFontSize(size); doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(pdfSafe(str),w), step=size*lh;
+    for(const ln of lines){ need(step); doc.text(ln,x,y+size); y+=step; }
+    y+=gap;
+  };
+  const code=src=>{
+    const size=9, step=size*1.5, pad=8;
+    doc.setFont("mono","normal"); doc.setFontSize(size);
+    const lines=[]; pdfSafe(src).replace(/\t/g,"    ").split("\n").forEach(l=>lines.push(...(l?doc.splitTextToSize(l,W-2*pad):[""])));
+    need(Math.min(lines.length,4)*step+2*pad);
+    doc.setFillColor(...C.code); doc.rect(M,y,W,pad,"F"); y+=pad;
+    for(const ln of lines){
+      if(y+step>BOTTOM){ doc.addPage(); y=M; }
+      doc.setFillColor(...C.code); doc.rect(M,y,W,step,"F");
+      doc.setFont("mono","normal"); doc.setFontSize(size); doc.setTextColor(...C.ink); doc.text(ln,M+pad,y+size+2); y+=step;
+    }
+    doc.setFillColor(...C.code); doc.rect(M,y,W,pad,"F"); y+=pad+8;
+  };
+  const answer=(label,color,text,exp,mono)=>{
+    need(40);
+    const top=y; para(label,{size:9,bold:true,color,x:M+12,w:W-12});
+    para(text,{size:10.5,bold:true,font:mono?"mono":"bvp",x:M+12,w:W-12,gap:2});
+    if(exp) para(exp,{size:10,color:C.ink,x:M+12,w:W-12});
+    doc.setDrawColor(...color); doc.setLineWidth(2.5);
+    if(doc.getCurrentPageInfo().pageNumber===doc.getNumberOfPages()&&y>top) doc.line(M+2,top+2,M+2,y-2);
+    y+=8;
+  };
+  // trang đầu
+  para("Trắc nghiệm Python · Lập trình Python NEC311",{size:9,bold:true,color:C.muted});
+  para("Ôn tập câu sai",{size:22,bold:true,gap:2});
+  para(`${rows.length} câu làm sai · xuất lúc ${new Date().toLocaleString("vi-VN")}`,{size:10.5,color:C.muted,gap:2});
+  const by={}; rows.forEach(x=>{const t=QUESTIONS[x.id].tp;by[t]=(by[t]||0)+1;});
+  para(Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`${TOPICS[t]}: ${n}`).join("   ·   "),{size:10,color:C.accent,gap:10});
+  rows.forEach((x,k)=>{
+    const q=QUESTIONS[x.id], perm=S.perm[x.id]||[0,1,2,3];
+    need(70);
+    if(k){ doc.setDrawColor(...C.line); doc.setLineWidth(.8); doc.line(M,y,M+W,y); y+=12; }
+    para(`Câu ${x.i+1}   ·   ${TOPICS[q.tp]}   ·   ${LEVELS[q.lv]}   ·   ${q.fill?"Tự điền":KINDS[q.k]}`,{size:9,bold:true,color:C.accent,gap:2});
+    para(q.q,{size:12,bold:true,gap:6});
+    if(q.code) code(q.code);
+    if(q.fill){
+      const typed=(S.typed&&S.typed[x.id])||"";
+      answer("BẠN TRẢ LỜI",C.bad,typed||"(để trống)","",true);
+      answer("ĐÁP ÁN ĐÚNG",C.ok,q.fill.join("   hoặc   "),q.exp,true);
+    } else {
+      const ch=S.ans[x.id];
+      answer(`BẠN CHỌN ${LETTERS[perm.indexOf(ch)]}`,C.bad,q.o[ch][0],q.o[ch][1],q.om);
+      answer(`ĐÁP ÁN ĐÚNG ${LETTERS[perm.indexOf(0)]}`,C.ok,q.o[0][0],q.o[0][1],q.om);
+    }
+    const kn=relatedKnowledge(q);
+    if(kn.hits.length||kn.topic){
+      need(40); para("KIẾN THỨC CẦN NẮM",{size:9,bold:true,color:C.muted,gap:2});
+      kn.hits.forEach(h=>para(`${h.t}. ${h.b}`,{size:10,gap:3}));
+      if(kn.topic) para(`Ghi nhớ chủ đề ${TOPICS[q.tp]}: ${kn.topic}`,{size:10,color:C.muted,gap:3});
+    }
+    y+=10;
+  });
+  const total=doc.getNumberOfPages();
+  for(let p=1;p<=total;p++){doc.setPage(p);doc.setFont("bvp","normal");doc.setFontSize(8);doc.setTextColor(140);doc.text(`${p}/${total}`,PW-M,PH-20,{align:"right"});}
+  return doc;
+}
+let pdfPending=null;
 async function exportPdf(rows){
   const btn=$("pdfBtn"), note=$("pdfNote");
+  // bước 2 trên điện thoại: mở bảng Chia sẻ ngay trong lần bấm (iOS bắt buộc)
+  if(pdfPending){
+    const f=pdfPending;
+    try{ await navigator.share({files:[f],title:f.name}); note.textContent="Xong. Nếu chọn Lưu vào Tệp, file nằm trong app Tệp."; }
+    catch(e){ note.textContent = e&&e.name==="AbortError" ? "Đã đóng bảng chia sẻ. Bấm lại nút để lưu." : "Không mở được bảng chia sẻ: "+(e&&e.message||e); return; }
+    pdfPending=null; btn.textContent="Xuất file PDF"; return;
+  }
   btn.disabled=true; const label=btn.textContent; btn.textContent="Đang tạo PDF…"; note.textContent="";
-  const root=document.createElement("div"); root.className="pdf-root"; let keepY;
+  let step="tải thư viện";
   try{
-    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
-    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
-    const when=new Date().toLocaleString("vi-VN");
-    root.innerHTML=`<div class="pdf-block pdf-title"><div class="eyebrow">Trắc nghiệm Python · Lập trình Python NEC311</div>
-        <h1>Ôn tập câu sai</h1><p>${rows.length} câu làm sai · xuất lúc ${esc(when)}</p><div class="rv-sum">${reviewSummary(rows)}</div></div>`
-      + rows.map(x=>`<div class="pdf-block">${reviewItem(x)}</div>`).join("");
-    document.body.appendChild(root);
-    keepY=window.scrollY; window.scrollTo(0,0);
-    if(document.fonts&&document.fonts.ready) await document.fonts.ready;
-    const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:"pt",format:"a4"});
-    const PW=595.28, PH=841.89, M=34, W=PW-2*M, H=PH-2*M; let y=M, page=1;
-    const blocks=[...root.querySelectorAll(".pdf-block")];
-    for(let b=0;b<blocks.length;b++){
-      note.textContent=`Đang dựng trang… ${b+1}/${blocks.length}`;
-      const cv=await html2canvas(blocks[b],{scale:2,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0,windowWidth:1200});
-      const scale=W/cv.width; let h=cv.height*scale;
-      if(h<=H){
-        if(y+h>PH-M){doc.addPage();page++;y=M;}
-        doc.addImage(cv.toDataURL("image/jpeg",0.92),"JPEG",M,y,W,h); y+=h+12;
-      } else {                                   // khối dài hơn 1 trang: cắt nhiều phần
-        if(y>M){doc.addPage();page++;y=M;}
-        const sliceH=Math.floor(H/scale); let sy=0;
-        while(sy<cv.height){
-          const part=document.createElement("canvas"); part.width=cv.width; part.height=Math.min(sliceH,cv.height-sy);
-          part.getContext("2d").drawImage(cv,0,sy,cv.width,part.height,0,0,cv.width,part.height);
-          doc.addImage(part.toDataURL("image/jpeg",0.92),"JPEG",M,M,W,part.height*scale);
-          sy+=part.height; if(sy<cv.height){doc.addPage();page++;} else y=M+part.height*scale+12;
-        }
-      }
-    }
+    await loadScript("vendor/jspdf.umd.min.js");
+    step="tải font"; const fonts=await pdfFonts();
+    step="dựng PDF"; const doc=buildPdf(rows,fonts);
     const total=doc.getNumberOfPages();
-    for(let p=1;p<=total;p++){doc.setPage(p);doc.setFontSize(8);doc.setTextColor(140);doc.text(`${p}/${total}`,PW-M,PH-16,{align:"right"});}
     const d=new Date(), pad=n=>String(n).padStart(2,"0");
     const fname=`On_tap_cau_sai_Python_${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}.pdf`;
     const blob=doc.output("blob");
-    note.textContent="Đang chờ bạn xác nhận lưu file…";
+    step="lưu file";
     const dl=await getDownloads();
     if(dl){
       try{ await dl.save({filename:fname,data:blob}); note.textContent=`Đã lưu ${fname} (${total} trang).`; }
       catch(e){ note.textContent = e&&e.code==="declined" ? "Bạn đã hủy lưu file. Bấm Xuất file PDF để thử lại." :
         e&&e.code==="rate_limited" ? "Đang có một hộp thoại lưu file mở sẵn. Hãy xử lý nó trước." : "Trang này không lưu file được ở đây. Hãy mở trang trong trình duyệt trên máy tính."; }
+      btn.textContent=label;
     } else {
-      doc.save(fname); note.textContent=`Đã tạo ${fname} (${total} trang). Kiểm tra thư mục Tải về.`;
+      const file=new File([blob],fname,{type:"application/pdf"});
+      const mobile=matchMedia("(pointer:coarse)").matches;
+      if(mobile && navigator.canShare && navigator.canShare({files:[file]})){
+        pdfPending=file; btn.textContent=`Lưu file PDF (${total} trang)`;
+        note.textContent="PDF đã sẵn sàng. Bấm nút xanh lần nữa rồi chọn Lưu vào Tệp (hoặc gửi qua Zalo, Messenger…).";
+      } else {
+        doc.save(fname); note.textContent=`Đã tạo ${fname} (${total} trang). Kiểm tra thư mục Tải về.`; btn.textContent=label;
+      }
     }
   }catch(e){
-    note.textContent="Không tạo được PDF (có thể do mất mạng khi tải thư viện). Kiểm tra kết nối rồi thử lại.";
-  }finally{
-    root.remove(); if(typeof keepY==="number") window.scrollTo(0,keepY); btn.disabled=false; btn.textContent=label;
-  }
+    note.textContent=`Không tạo được PDF (lỗi ở bước ${step}: ${e&&e.message||e}). Kiểm tra mạng rồi thử lại; nếu vẫn lỗi, chụp màn hình gửi Claude.`;
+    btn.textContent=label;
+  }finally{ btn.disabled=false; }
 }
 
 document.addEventListener("keydown",e=>{
@@ -4391,6 +4465,17 @@ document.addEventListener("keydown",e=>{
 if(load()){ renderFilters(); render(); const c=counts();
   if(c.done) setNote(`Đã khôi phục tiến độ: ${c.done}/${S.ids.length} câu (${c.ok} đúng, ${c.bad} sai). Tự lưu sau mỗi câu.`); }
 else { renderFilters(); newSession(QUESTIONS.map(q=>q.id)); }
+
+// App ngoài màn hình chính không có nút tải lại: so mã với bản trên mạng, khác thì tải bản mới (tiến độ vẫn giữ)
+async function checkUpdate(){
+  try{
+    const r=await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok) return;
+    const m=(await r.text()).match(/<script id="app">([\s\S]*)<\/script>/);
+    if(m && m[1].trim()!==$("app").textContent.trim()) location.replace(location.pathname+"?v="+Date.now());
+  }catch(e){}
+}
+checkUpdate();
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") checkUpdate(); });
 </script>
 
 </body></html>

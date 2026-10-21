@@ -59,7 +59,8 @@ h1{margin:2px 0 0;font-size:clamp(24px,6vw,30px);font-weight:800;letter-spacing:
 .tc .bar i{display:block;height:100%;background:var(--c);border-radius:3px}
 
 /* thanh chọn tuần */
-.tabs{display:flex;gap:6px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:50}
+.tabs{display:flex;gap:6px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0}
 .tab{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 6px;font:600 13px var(--sans);color:var(--ink);cursor:pointer}
 .tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
