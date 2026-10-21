@@ -158,6 +158,7 @@ const L = {
   kdp:["Design Patterns",A("GVKRhuBov2c6Bf7Hi6Zg4q")],
   kdt:["Đề thi KTPM",A("7v2siFgeto8a8ZVuRx9mqt")],
   kpz:["PizzaStore",A("5PbCj4C5fHWfxitgcD2Wv8")],
+  obs:["Observer (refactoring.guru)","https://refactoring.guru/design-patterns/observer"],
 };
 const SUB = {py:"Python giữa kỳ",btl:"BTL Python",web:"Web 1",qlda:"QLDA PM",kt:"Kiến trúc & TK",ex:"Thi"};
 // s: môn · t: giờ · h: số giờ ôn
@@ -184,16 +185,16 @@ const PLAN = [
   {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Python",it:["Phòng NDN.903 · Trắc nghiệm"],exam:1},
   {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: khởi động",it:["Chốt đề tài + chức năng","Dựng khung project, các lớp chính","Lập danh sách việc còn lại"]},
   {s:"web",t:"19:30–21:00",h:1.5,ttl:"Web 1 GK: chốt",it:["Đọc lại tờ cú pháp + lỗi hay gặp","Ngủ trước 23:00"]},
-  {s:"kt",t:"21:15–21:45",h:0.5,ttl:"Code KT&TK: 1 bài bộ đề",it:["Chọn 1 bài ngắn trong Bộ đề luyện SOT380"],ln:["kbd"]}]},
+  {s:"kt",t:"17:30–18:30",h:1,ttl:"Code KT&TK: làm quen Observer",it:["Nắm 4 vai: Subject, ConcreteSubject, Observer, ConcreteObserver","Code ví dụ trạm thời tiết: attach / detach / notify","Đặc điểm: quan hệ 1 – nhiều, Subject không cần biết lớp cụ thể của Observer"],ln:["obs","kdp"]}]},
  {d:"2026-10-27",fx:"Sau giờ thi: học cả ngày đến 21:00",b:[
   {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Web 1",it:["Phòng NDN.210"],exam:1},
   {s:"kt",t:"21:30–22:00",h:0.5,ttl:"Code KT&TK: Builder từ trí nhớ",it:["Chỉ 30 phút, gõ xong là ngủ"],ln:["kk4"]}]},
  {d:"2026-10-28",fx:"Cả ngày trống",b:[
   {s:"py",t:"8:00–11:30",h:3.5,ttl:"BTL Python: code chức năng chính",it:["Hoàn thành các chức năng cốt lõi","Chạy thử với dữ liệu thật"]},
-  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: rà lại các mẫu",it:["Đọc Cẩm nang điểm 10","Với mỗi mẫu: khi nào dùng, sơ đồ lớp","Code lại 2 mẫu yếu nhất"],ln:["kcn","kdp"]},
+  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: rà lại các mẫu",it:["Đọc Cẩm nang điểm 10","Với mỗi mẫu: khi nào dùng, sơ đồ lớp","Code lại Observer + 1 mẫu yếu nhất"],ln:["kcn","kdp"]},
   {s:"qlda",t:"19:30–21:30",h:2,ttl:"QLDA CK: rà BTL",it:["Đọc lại BTL, liệt kê phần còn thiếu","Mở lại file MS Project, kiểm tra tiến độ/tài nguyên"],ln:["qms"]}]},
  {d:"2026-10-29",fx:"Học cả ngày đến 21:00",b:[
-  {s:"kt",t:"21:30–22:00",h:0.5,ttl:"Code KT&TK: Decorator + Composite nhanh",it:["Mỗi mẫu 15 phút, chỉ viết khung lớp"],ln:["kk4"]}]},
+  {s:"kt",t:"21:30–22:00",h:0.5,ttl:"Code KT&TK: Observer từ trí nhớ",it:["Gõ lại ví dụ Observer, thêm 1 Observer mới mà không sửa Subject"],ln:["obs"]}]},
  {d:"2026-10-30",fx:"Chiều: học 13:00–17:30",b:[
   {s:"kt",t:"8:30–11:30",h:3,ttl:"KT&TK CK: luyện đề",it:["Làm 2 bài trong Bộ đề luyện SOT380","So với lời giải, ghi lỗi"],ln:["kbd","kbs"]},
   {s:"rest",t:"Tối",ttl:"Nghỉ: nạp lại sức trước 2 ngày ôn QLDA",it:[]}]},
@@ -208,11 +209,11 @@ const PLAN = [
  {d:"2026-11-02",fx:"Tuần thi: cả ngày trống",b:[
   {s:"qlda",t:"7:30–11:30",h:4,ttl:"QLDA CK: đề thi thử",it:["Làm Đề thi thử QLDA, bấm giờ","Ôn lại phần sai"],ln:["qde","qtl"]},
   {s:"qlda",t:"14:00–17:30",h:3.5,ttl:"QLDA CK: luyện vấn đáp",it:["Tự hỏi – tự trả lời về BTL: vì sao chọn cách làm này, đường găng, phân bổ nguồn lực…","Nói to thành lời, bấm giờ 5 phút/câu"],ln:["qmm"]},
-  {s:"kt",t:"18:00–18:45",h:0.75,ttl:"Code KT&TK: khung 4 mẫu",it:["Viết nhanh khung code Decorator, Composite, Builder, Singleton"],ln:["kk4"]},
+  {s:"kt",t:"18:00–18:45",h:0.75,ttl:"Code KT&TK: khung 5 mẫu",it:["Viết nhanh khung code Decorator, Composite, Builder, Singleton, Observer"],ln:["kk4","obs"]},
   {s:"qlda",t:"20:00–21:00",h:1,ttl:"QLDA CK: chốt",it:["In/lưu BTL, sạc máy","Ngủ sớm"]}]},
  {d:"2026-11-03",fx:"Sáng: thi QLDA · Tối: Kiểm thử 18:00–20:30",b:[
   {s:"ex",t:"Sáng",ttl:"Thi cuối kỳ QLDA PM",it:["Phòng NDN.707 · BTL – Vấn đáp"],exam:1},
-  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: viết lại 4 mẫu",it:["Decorator, Composite, Builder, Singleton: viết code từ giấy trắng","Đối chiếu Khuôn 4 mẫu"],ln:["kk4","kcd"]},
+  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: viết lại 5 mẫu",it:["Decorator, Composite, Builder, Singleton, Observer: viết code từ giấy trắng","Đối chiếu Khuôn 4 mẫu + Observer"],ln:["kk4","kcd","obs"]},
   {s:"kt",t:"21:00–22:00",h:1,ttl:"KT&TK CK: soát lỗi",it:["Đọc lại chỗ chiều nay viết sai"]}]},
  {d:"2026-11-04",fx:"Cả ngày trống",b:[
   {s:"kt",t:"8:00–11:30",h:3.5,ttl:"KT&TK CK: thi thử bấm giờ",it:["Làm Đề thi KTPM như thi thật","Chấm theo Cẩm nang điểm 10: thiếu gì để lên 10?"],ln:["kdt","kcn"]},
