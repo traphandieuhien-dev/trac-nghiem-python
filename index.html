@@ -4416,7 +4416,7 @@ async function exportPdf(rows){
   // bước 2 trên điện thoại: mở bảng Chia sẻ ngay trong lần bấm (iOS bắt buộc)
   if(pdfPending){
     const f=pdfPending;
-    try{ await navigator.share({files:[f],title:f.name}); note.textContent="Xong. Nếu chọn Lưu vào Tệp, file nằm trong app Tệp."; }
+    try{ await navigator.share({files:[f]});   // chỉ gửi file: kèm title thì iOS có thể lưu ra văn bản chứa mỗi tên file note.textContent="Xong. Nếu chọn Lưu vào Tệp, file nằm trong app Tệp."; }
     catch(e){ note.textContent = e&&e.name==="AbortError" ? "Đã đóng bảng chia sẻ. Bấm lại nút để lưu." : "Không mở được bảng chia sẻ: "+(e&&e.message||e); return; }
     pdfPending=null; btn.textContent="Xuất file PDF"; return;
   }
