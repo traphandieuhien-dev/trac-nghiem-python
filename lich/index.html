@@ -311,6 +311,20 @@ if(cur<0) cur = todayIso < WEEKS[0][0] ? 0 : "all";
 renderNext(); renderTotals(); renderHabits(); renderDays(cur);
 const td = document.getElementById("d"+todayIso);
 if(td) setTimeout(()=>td.scrollIntoView({block:"start"}),50);
+
+// App ngoài màn hình chính không có nút tải lại: tự so mã với bản trên mạng, khác thì tải bản mới
+async function checkUpdate(){
+  try{
+    const r = await fetch(location.pathname + "?t=" + Date.now(), {cache:"no-store"});
+    if(!r.ok) return;
+    const html = await r.text();
+    const m = html.match(/<script>([\s\S]*)<\/script>/);
+    const mine = document.scripts[document.scripts.length-1].textContent;
+    if(m && m[1].trim() !== mine.trim()) location.replace(location.pathname + "?v=" + Date.now());
+  }catch(e){}
+}
+checkUpdate();
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") checkUpdate(); });
 </script>
 </body>
 </html>
