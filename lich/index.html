@@ -130,7 +130,7 @@ li{margin:1px 0}
   <div class="note">
     <p><b>Giả định:</b> tuần 2/11 – 7/11 ngoài giờ thi chỉ còn lớp Kiểm thử (tối thứ 3, 5 và sáng thứ 7). Nếu có lịch học khác, nhắn Claude để chỉnh.</p>
     <p><b>TOEIC &amp; tiếng Nhật</b> trong mùa thi chỉ giữ nhịp 20 phút mỗi thứ để không đứt chuỗi. Từ 8/11 tăng lên: TOEIC 60 phút/ngày, tiếng Nhật 45 phút/ngày cho mục tiêu N5 cuối năm.</p>
-    <p><b>Kiến trúc &amp; TK</b> được nhiều giờ nhất (≈19 giờ) vì mục tiêu là 10 điểm, trong khi sức hiện tại khoảng 8.</p>
+    <p><b>Kiến trúc &amp; TK</b> được nhiều giờ nhất (≈26 giờ) vì mục tiêu là 10 điểm, trong khi sức hiện tại khoảng 8: ngày nào cũng có ít nhất 1 khối code môn này đến hôm thi.</p>
     <p>Link tài liệu mở trang Claude của bạn, cần đăng nhập đúng tài khoản.</p>
   </div>
 </div>
@@ -163,44 +163,52 @@ const SUB = {py:"Python giữa kỳ",btl:"BTL Python",web:"Web 1",qlda:"QLDA PM"
 // s: môn · t: giờ · h: số giờ ôn
 const PLAN = [
  {d:"2026-10-21",fx:"Tối: học online Web 1",b:[
-  {s:"py",t:"13:00–16:00",h:3,ttl:"Trắc nghiệm Python: phần nền tảng",it:["Tùy chọn bộ đề → chọn chủ đề: Tổng quan, Biến & kiểu, Nhập & ép kiểu, Toán tử, Phép toán bit, Điều kiện (~100 câu)","Câu có code: tự đoán kết quả trước rồi mới nhìn đáp án","Cuối buổi xem Ôn tập câu sai, ghi lỗi hay mắc ra giấy"],ln:["quiz"]}]},
+  {s:"py",t:"13:00–16:00",h:3,ttl:"Trắc nghiệm Python: phần nền tảng",it:["Tùy chọn bộ đề → chọn chủ đề: Tổng quan, Biến & kiểu, Nhập & ép kiểu, Toán tử, Phép toán bit, Điều kiện (~100 câu)","Câu có code: tự đoán kết quả trước rồi mới nhìn đáp án","Cuối buổi xem Ôn tập câu sai, ghi lỗi hay mắc ra giấy"],ln:["quiz"]},
+  {s:"kt",t:"16:30–17:30",h:1,ttl:"Code KT&TK: Singleton + Builder",it:["Gõ lại từ giấy trắng, không nhìn tài liệu","Xong mới mở Khuôn 4 mẫu để so"],ln:["kk4","kbs"]}]},
  {d:"2026-10-22",fx:"Học cả ngày đến 21:00",b:[
-  {s:"rest",t:"",ttl:"Không xếp ôn, ngủ sớm",it:[]}]},
+  {s:"kt",t:"21:30–22:00",h:0.5,ttl:"Code KT&TK: Singleton từ trí nhớ",it:["Chỉ 30 phút, gõ xong là ngủ"],ln:["kk4"]}]},
  {d:"2026-10-23",fx:"Chiều: học 13:00–17:30",b:[
   {s:"py",t:"8:30–11:00",h:2.5,ttl:"Trắc nghiệm Python: Vòng lặp → Hàm",it:["Chọn chủ đề: Vòng lặp, List, Chuỗi, Hàm, Lambda · map · filter, Lỗi & ngoại lệ (~120 câu)","Chú ý bẫy: range, slicing, sort() trả về None, b = a với list","Xem Ôn tập câu sai"],ln:["quiz"]},
-  {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 GK: ôn lại bài trên lớp",it:["Xem lại các bài thực hành từ đầu kỳ + bài học online tối 21/10","Ghi 1 tờ cú pháp hay quên"],ln:["crud"]}]},
+  {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 GK: ôn lại bài trên lớp",it:["Xem lại các bài thực hành từ đầu kỳ + bài học online tối 21/10","Ghi 1 tờ cú pháp hay quên"],ln:["crud"]},
+  {s:"kt",t:"21:45–22:30",h:0.75,ttl:"Code KT&TK: Decorator",it:["Gõ lại ví dụ Decorator, tự thêm 1 lớp trang trí mới"],ln:["kcd"]}]},
  {d:"2026-10-24",fx:"Sáng: Kiểm thử 8:30–11:00",b:[
+  {s:"kt",t:"11:15–12:00",h:0.75,ttl:"Code KT&TK: Composite",it:["Gõ lại cây Composite (lá + nhánh), chạy thử in cây"],ln:["kcd"]},
   {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 GK: luyện code tay",it:["Tự làm lại 1 trang từ đầu, không nhìn code cũ","Luyện các dạng hay ra: form, bảng, bố cục CSS…"]},
   {s:"py",t:"19:30–21:30",h:2,ttl:"Trắc nghiệm Python: OOP",it:["Chọn chủ đề OOP (88 câu): class, __init__, kế thừa, super(), đóng gói, ghi đè","Sai câu nào thì tra lại lý thuyết trong Ôn OOP Ch3"],ln:["quiz","poop"]}]},
  {d:"2026-10-25",fx:"Cả ngày trống",b:[
   {s:"py",t:"8:00–10:00",h:2,ttl:"Thi thử trắc nghiệm Python",it:["Nguồn tài liệu → Luyện đề giữa kỳ (dạng đề thầy), bật Trộn thứ tự, làm một mạch như thi thật","Còn giờ: chủ đề GUI Tkinter, Nâng cao, Thuật toán"],ln:["quiz"]},
+  {s:"kt",t:"10:30–11:30",h:1,ttl:"Code KT&TK: Factory / PizzaStore",it:["Gõ lại PizzaStore: Simple Factory → Factory Method"],ln:["kpz"]},
   {s:"web",t:"14:00–17:00",h:3,ttl:"Web 1 GK: làm bài như thi",it:["Bấm giờ làm trọn 1 bài thực hành","Ghi lỗi gặp phải vào tờ cú pháp"]},
   {s:"py",t:"20:00–20:30",h:0.5,ttl:"Trắc nghiệm Python: chốt",it:["Bấm Làm lại các câu sai từ buổi sáng","Đọc lại tờ lỗi hay mắc · Ngủ trước 23:00"],ln:["quiz"]}]},
  {d:"2026-10-26",fx:"Sáng: thi Python",b:[
   {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Python",it:["Phòng NDN.903 · Trắc nghiệm"],exam:1},
   {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: khởi động",it:["Chốt đề tài + chức năng","Dựng khung project, các lớp chính","Lập danh sách việc còn lại"]},
-  {s:"web",t:"19:30–21:00",h:1.5,ttl:"Web 1 GK: chốt",it:["Đọc lại tờ cú pháp + lỗi hay gặp","Ngủ trước 23:00"]}]},
+  {s:"web",t:"19:30–21:00",h:1.5,ttl:"Web 1 GK: chốt",it:["Đọc lại tờ cú pháp + lỗi hay gặp","Ngủ trước 23:00"]},
+  {s:"kt",t:"21:15–21:45",h:0.5,ttl:"Code KT&TK: 1 bài bộ đề",it:["Chọn 1 bài ngắn trong Bộ đề luyện SOT380"],ln:["kbd"]}]},
  {d:"2026-10-27",fx:"Sau giờ thi: học cả ngày đến 21:00",b:[
-  {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Web 1",it:["Phòng NDN.210"],exam:1}]},
+  {s:"ex",t:"7:30",ttl:"Thi giữa kỳ Web 1",it:["Phòng NDN.210"],exam:1},
+  {s:"kt",t:"21:30–22:00",h:0.5,ttl:"Code KT&TK: Builder từ trí nhớ",it:["Chỉ 30 phút, gõ xong là ngủ"],ln:["kk4"]}]},
  {d:"2026-10-28",fx:"Cả ngày trống",b:[
   {s:"py",t:"8:00–11:30",h:3.5,ttl:"BTL Python: code chức năng chính",it:["Hoàn thành các chức năng cốt lõi","Chạy thử với dữ liệu thật"]},
-  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: rà lại các mẫu",it:["Đọc Cẩm nang điểm 10","Với mỗi mẫu: khi nào dùng, sơ đồ lớp, khung code"],ln:["kcn","kdp"]},
+  {s:"kt",t:"14:00–17:00",h:3,ttl:"KT&TK CK: rà lại các mẫu",it:["Đọc Cẩm nang điểm 10","Với mỗi mẫu: khi nào dùng, sơ đồ lớp","Code lại 2 mẫu yếu nhất"],ln:["kcn","kdp"]},
   {s:"qlda",t:"19:30–21:30",h:2,ttl:"QLDA CK: rà BTL",it:["Đọc lại BTL, liệt kê phần còn thiếu","Mở lại file MS Project, kiểm tra tiến độ/tài nguyên"],ln:["qms"]}]},
  {d:"2026-10-29",fx:"Học cả ngày đến 21:00",b:[
-  {s:"rest",t:"",ttl:"Không xếp ôn, ngủ sớm",it:[]}]},
+  {s:"kt",t:"21:30–22:00",h:0.5,ttl:"Code KT&TK: Decorator + Composite nhanh",it:["Mỗi mẫu 15 phút, chỉ viết khung lớp"],ln:["kk4"]}]},
  {d:"2026-10-30",fx:"Chiều: học 13:00–17:30",b:[
   {s:"kt",t:"8:30–11:30",h:3,ttl:"KT&TK CK: luyện đề",it:["Làm 2 bài trong Bộ đề luyện SOT380","So với lời giải, ghi lỗi"],ln:["kbd","kbs"]},
   {s:"rest",t:"Tối",ttl:"Nghỉ: nạp lại sức trước 2 ngày ôn QLDA",it:[]}]},
  {d:"2026-10-31",fx:"Sáng: Kiểm thử 8:30–11:00",b:[
   {s:"py",t:"14:00–17:00",h:3,ttl:"BTL Python: hoàn thành chức năng",it:["Xong toàn bộ chức năng, bắt đầu viết báo cáo"]},
-  {s:"kt",t:"19:30–21:30",h:2,ttl:"KT&TK CK: Factory/PizzaStore",it:["Xem lại PizzaStore và các mẫu tạo đối tượng"],ln:["kpz"]}]},
+  {s:"kt",t:"19:30–21:30",h:2,ttl:"KT&TK CK: code lại PizzaStore",it:["Code lại PizzaStore không nhìn bài cũ, rồi so với chú giải"],ln:["kpz"]}]},
  {d:"2026-11-01",fx:"Cả ngày trống",b:[
   {s:"qlda",t:"8:00–11:30",h:3.5,ttl:"QLDA CK: hoàn thiện BTL",it:["Sửa báo cáo, sơ đồ, file MS Project","Chuẩn bị phần trình bày"],ln:["qms","qc3"]},
   {s:"qlda",t:"14:00–17:00",h:3,ttl:"QLDA CK: lý thuyết",it:["Học theo Mind map, từng chương","Làm trắc nghiệm QLDA"],ln:["qmm","qtl","qtn"]},
+  {s:"kt",t:"17:15–18:00",h:0.75,ttl:"Code KT&TK: 1 bài bộ đề",it:["Chọn bài chưa làm trong Bộ đề luyện SOT380"],ln:["kbd"]},
   {s:"web",t:"19:30–21:30",h:2,ttl:"Web 1 CK: khởi động",it:["Xem lại bài GK, những phần làm chưa tốt","Lập danh sách dạng bài thực hành"],ln:["crud"]}]},
  {d:"2026-11-02",fx:"Tuần thi: cả ngày trống",b:[
   {s:"qlda",t:"7:30–11:30",h:4,ttl:"QLDA CK: đề thi thử",it:["Làm Đề thi thử QLDA, bấm giờ","Ôn lại phần sai"],ln:["qde","qtl"]},
   {s:"qlda",t:"14:00–17:30",h:3.5,ttl:"QLDA CK: luyện vấn đáp",it:["Tự hỏi – tự trả lời về BTL: vì sao chọn cách làm này, đường găng, phân bổ nguồn lực…","Nói to thành lời, bấm giờ 5 phút/câu"],ln:["qmm"]},
+  {s:"kt",t:"18:00–18:45",h:0.75,ttl:"Code KT&TK: khung 4 mẫu",it:["Viết nhanh khung code Decorator, Composite, Builder, Singleton"],ln:["kk4"]},
   {s:"qlda",t:"20:00–21:00",h:1,ttl:"QLDA CK: chốt",it:["In/lưu BTL, sạc máy","Ngủ sớm"]}]},
  {d:"2026-11-03",fx:"Sáng: thi QLDA · Tối: Kiểm thử 18:00–20:30",b:[
   {s:"ex",t:"Sáng",ttl:"Thi cuối kỳ QLDA PM",it:["Phòng NDN.707 · BTL – Vấn đáp"],exam:1},
